@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>短视频聚合页</title>
+<style>
+    body { font-family: Arial; margin: 0; background: #f4f4f4; }
+    header { background: #ff5722; color: white; padding: 15px; text-align: center; }
+    nav { display: flex; justify-content: center; flex-wrap: wrap; background: #fff; padding: 10px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1);}
+    nav button { background: #eee; border: none; padding: 10px 15px; margin: 5px; border-radius: 5px; cursor: pointer; font-size: 14px; }
+    nav button.active { background: #ff5722; color: white; }
+    .container { max-width: 1200px; margin: 20px auto; display: grid; grid-template-columns: repeat(auto-fill,minmax(250px,1fr)); gap: 20px; }
+    .video-card { background:white; border-radius:8px; overflow:hidden; box-shadow:0 2px 5px rgba(0,0,0,0.1); cursor:pointer; transition: transform 0.2s; }
+    .video-card:hover { transform: scale(1.02); }
+    .video-card img { width: 100%; display:block; }
+    .video-card h3 { margin:10px; font-size:16px; }
+    .video-card p { margin:0 10px 10px 10px; color:#666; font-size:14px; }
+    .video-popup { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); justify-content:center; align-items:center; z-index:1000; }
+    .video-popup video { max-width:90%; max-height:80%; }
+    .video-popup span { position:absolute; top:20px; right:30px; font-size:30px; color:white; cursor:pointer; }
+    footer { text-align:center; padding:15px; color:#888; margin-top:30px; }
+    @media(max-width:600px){ nav button { font-size:12px; padding:8px 10px; } }
+</style>
+</head>
+<body>
+
+<header><h1>短视频聚合页</h1></header>
+
+<nav id="categoryMenu"></nav>
+
+<div class="container" id="videoContainer"></div>
+
+<div class="video-popup" id="videoPopup">
+    <span id="closePopup">&times;</span>
+    <video controls src="" id="popupVideo"></video>
+</div>
+
+<footer>&copy; 2026 短视频聚合页</footer>
+
+<script>
+let videos = [];
+
+const container = document.getElementById('videoContainer');
+const popup = document.getElementById('videoPopup');
+const popupVideo = document.getElementById('popupVideo');
+const closePopup = document.getElementById('closePopup');
+const categoryMenu = document.getElementById('categoryMenu');
+
+// 加载 JSON 视频数据
+fetch('videos.json')
+  .then(response => response.json())
+  .then(data => {
+    videos = data;
+    initCategories();
+    showVideos('全部');
+  });
+
+// 初始化分类菜单
+function initCategories() {
+    const categories = ['全部', ...new Set(videos.map(v=>v.category))];
+    categoryMenu.innerHTML = '';
+    categories.forEach(cat => {
+        const btn = document.createElement('button');
+        btn.textContent = cat;
+        if(cat==='全部') btn.classList.add('active');
+        btn.onclick = () => {
+            document.querySelectorAll('#categoryMenu button').forEach(b=>b.classList.remove('active'));
+            btn.classList.add('active');
+            showVideos(cat);
+        };
+        categoryMenu.appendChild(btn);
+    });
+}
+
+// 显示视频
+function showVideos(category) {
+    container.innerHTML = '';
+    const filtered = category==='全部'?videos:videos.filter(v=>v.category===category);
+    filtered.forEach(v=>{
+        const card = document.createElement('div');
+        card.className='video-card';
+        card.innerHTML=`<img src="${v.thumb}" alt="${v.title}"><h3>${v.title}</h3><p>分类: ${v.category}</p>`;
+        card.onclick = ()=>{ popupVideo.src=v.src; popup.style.display='flex'; };
+        container.appendChild(card);
+    });
+}
+
+// 关闭弹窗
+closePopup.onclick = ()=>{ popup.style.display='none'; popupVideo.pause(); popupVideo.src=''; };
+</script>
+
+</body>
+</html>

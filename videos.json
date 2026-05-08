@@ -1,0 +1,26 @@
+[
+  {
+    "title": "搞笑视频1",
+    "category": "搞笑",
+    "src": "https://www.w3schools.com/html/mov_bbb.mp4",
+    "thumb": "https://via.placeholder.com/400x225?text=搞笑1"
+  },
+  {
+    "title": "搞笑视频2",
+    "category": "搞笑",
+    "src": "https://www.w3schools.com/html/movie.mp4",
+    "thumb": "https://via.placeholder.com/400x225?text=搞笑2"
+  },
+  {
+    "title": "体育视频1",
+    "category": "体育",
+    "src": "https://www.w3schools.com/html/mov_bbb.mp4",
+    "thumb": "https://via.placeholder.com/400x225?text=体育1"
+  },
+  {
+    "title": "音乐视频1",
+    "category": "音乐",
+    "src": "https://www.w3schools.com/html/movie.mp4",
+    "thumb": "https://via.placeholder.com/400x225?text=音乐1"
+  }
+]
